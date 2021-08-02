@@ -172,7 +172,41 @@ typedef struct {
     labelTableNodePtr labelHptr;
     wordNodePtr dataHptr;
     wordNodePtr codeHptr;
+    
+    /* Command line */
+    command *cmd;		    	/* A pointer to the command */
+    operandInfo op1;			/* The first operand */
+    operandInfo op2;			/* The secound operand */
+    operandInfo op3;			/* The third operand */
+    
 } variables;
+
+
+/* ======================== my part - ayala ======================== */
+
+typedef struct
+{
+    char *name;
+    unsigned int opcode : 6; /* opcode is at most 6 bytes */
+    int numOfParams;
+} command;
+
+/* Operands */
+typedef enum { 
+    NUMBER = 0, 
+    LABEL = 1, 
+    REGISTER = 2, 
+    INVALID = -1 
+} opType;
+
+typedef struct {
+	int value;		    	/* Value */
+	char *str;			    /* String */
+	opType type;			/* Type of Operands */
+	int address;			/* The adress of the operand in the memory */
+} operandInfo;
+
+/* =================================================================== */
 
 
 /* ~~~~~~~~~~~~~~ Directives List ~~~~~~~~~~~~~~ */
