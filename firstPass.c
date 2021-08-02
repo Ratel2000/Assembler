@@ -1,3 +1,4 @@
+
 #include "firstPass.h"
 #include "defaults.h"
 
@@ -52,10 +53,6 @@ void firstPass(variables *variablesPtr) {
     if(!variablesPtr->foundError)
         updateTables(variablesPtr);
 }
-
-
-
-
 
 /* Handle the instruction statement
  * Fill the word, update the linked list and do anything it needs
