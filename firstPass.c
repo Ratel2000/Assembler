@@ -281,8 +281,12 @@ int isLegalLabel(char *labelStr, int lineNum, int printErrors) {
     return 1;
 }
 
+    
+/* I did not fully understand what the code does from this part, also when I tried to run a lot of problems appeard */
+
     /* =================================================================== */
 
+    
     
     
     if (findNumberOfOperands(wordPtr->code.opcode, wordPtr->code.funct) == 3) 
