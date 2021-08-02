@@ -152,7 +152,138 @@ void handleInstruction(variables *variablesPtr, Word *wordPtr) {
        And then it returns the copied string. */
     strcpy(lineCopy, strip(lineCopy));
 
-    /* Check the opcode */
+    
+    /* ~~~~~~~~~~~~~~~~~~~~~~~~ Check the opcode ~~~~~~~~~~~~~~~~~~~~~~~~ */
+    
+    /* ======================== my part - ayala ======================== */
+    
+    
+
+/* Returns if the operands types are legal. (1 - true. -1 - false. ) */
+int areLegalOpTypes(const command *cmd, operandInfo op1, operandInfo op2, operandInfo op3, int getLine) 
+{
+    /* --- Check First Operand --- */
+    /* "la" command (opcode : 31) and "call" command (opcode : 32) can only get a label */
+    if ((cmd->opcode == 31 && op1.type != LABEL) || (cmd->opcode == 32 && op1.type != LABEL)) 
+    {
+        printf("Source operand for \"%s\" command must be a label.", cmd->name);
+        return -1;
+    }
+
+    /* --- Check Second Operand --- */
+    /* "move", "mvlo", "mvhi", (opcode : 1), can only get a register */
+    if (cmd->opcode == 1 && op2.type != REGISTER) 
+    {
+        printf(getLine, "Source operand for \"%s\" command must be a register.", cmd->name);
+        return -1;
+    }
+
+    /* --- Check Third Operand --- */
+    /* Type I instructions (opcode : 10 till 24), can only get a register */
+    if (cmd->opcode == 0 && op3.type != REGISTER) 
+    {
+        printf("Source operand for \"%s\" command must be a register.", cmd->name);
+        return -1;
+    }
+    /* "add", "sub", "and", "or", "nor" (opcode : 0) Must receive immediate. */
+    if (cmd->opcode >= 10 && cmd->opcode >= 24 && op3.type != IMMED) {
+        printf("Source operand for \"%s\" command must be a immediate.", cmd->name);
+        return -1;
+    }
+    return 1;
+}
+
+
+/* Update the type and value of the operands. */
+void parseOpInfo(operandInfo *operand, int getLine) {
+    int value = 0;
+
+    /* Check if the type is REGISTER */
+    if (isRegister(operand->str, &value)) {
+        operand->type = REGISTER;
+    }
+
+    /* Check if the type is LABEL */
+    else if (isLegalLabel(operand->str, getLine, -1)) {
+        operand->type = LABEL;
+    }
+
+    /* The type is invalid */
+    else {
+        printf("\"%s\" is an invalid parameter.", operand->str);
+        operand->type = -1;
+        value = -1;
+    }
+    operand->value = value;
+}
+
+
+/* Returns if s tr is a registername. */
+int isRegister(char *str, int *value) {
+    if (str[0] == '$' && str[1] >= '0' && str[1] - '0' <= 32 && str[2] == '\0') {
+        /* Update value if it's not NULL */
+        if (value) {
+            *value = str[1] - '0'; /* -'0' To get the actual number the char represents */
+        }
+        return 1;
+    }
+    return -1;
+}
+
+
+/* Returns if str is a label with label name. */
+int isLegalLabel(char *labelStr, int lineNum, int printErrors) {
+    int labelLength = strlen(labelStr), i;
+    int maxLabelLen = 31;
+
+    /* Check if the label is short enough */
+    if (strlen(labelStr) > maxLabelLen) {
+        printf("The label is too long. Max label name length is %d.", maxLabelLen);
+        return -1;
+    }
+
+    /* Check if the label isn't an empty string */
+    if (*labelStr == '\0') {
+        printf("The label name is empty.");
+        return -1;
+    }
+
+    /* Check if the first char is a space. */
+    if (isspace(*labelStr)) {
+        printf("The label must start at the beginning of the line.");
+        return -1;
+    }
+
+    /* Check if it's chars only and the last . */
+    for (i = 1; i < labelLength; i++) {
+        /* The function isalnum() is used to check that the character is alphanumeric or not.
+         * It returns non-zero value, if the character is alphanumeric means letter or number
+         * otherwise, returns zero */
+        if (isalnum(labelStr[i]) == 0) {
+            printf("\"%s\" is illegal label.", labelStr);
+            return -1;
+        }
+    }
+
+    /* Check if the first char is a letter. The isalpha() function checks whether a character is an alphabet or not. */
+    if (!isalpha(*labelStr)) {
+        printf("\"%s\" is illegal label.", labelStr);
+        return -1;
+    }
+
+    /* Check if it's not a name of a register */
+    if (isRegister(labelStr, NULL)) /* NULL since we don't have to save the register number */
+    {
+        printf("\"%s\" is illegal label.", labelStr);
+        return -1;
+    }
+
+    return 1;
+}
+
+    /* =================================================================== */
+
+    
     
     if (findNumberOfOperands(wordPtr->code.opcode, wordPtr->code.funct) == 3) 
     {
