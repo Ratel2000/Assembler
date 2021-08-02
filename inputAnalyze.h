@@ -3,8 +3,9 @@
 
 #include "defaults.h"
 
-#define IMPORTANT 0
-#define REST 1
+#define FIRST 0
+#define SECEND 1
+#define THIRED 2
 #define STRING_PARTS 2
 #define DELIM_EXIST 0
 #define DELIM_NOT_EXIST 1

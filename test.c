@@ -1,66 +1,74 @@
 #include "defaults.h"
 #include "firstPass.h"
 
-int split(char *str, char *delim, char arr[3][LINE_LEN]) {
-    char *tok;
-    char strCopy[LINE_LEN];
-    char temp[LINE_LEN];
-    int i;
+/* Handle the instruction statement
+ * Fill the word, update the linked list and do anything it needs
+*/
+void handleInstruction(variables *variablesPtr,Word *wordPtr) {
+    char *lineCopy = (char*) malloc(LINE_LEN);
+    char *temp = lineCopy;
+    char *back;
+    strcpy(lineCopy,variablesPtr->line);
 
-    strcpy(strCopy, str);
+    /* find the label */
+    back = findLabel(lineCopy);
+    strcpy(variablesPtr->label,back);
+    free(back);
+    if(strlen(variablesPtr->label) == strlen(variablesPtr->line)-1) {
+        variablesPtr->status = MissingOperation;
+        return;
+    }
+    if(strcmp(variablesPtr->label,"")) {
+        checkSyntaxValidLabel(variablesPtr,variablesPtr->label,True);
+        if(variablesPtr->status != Valid)
+            return;
 
-    
+        checkLabel(variablesPtr,variablesPtr->label,NoneEntOrExt);
+        if(variablesPtr->status != Valid)
+            return;
 
-    /* check if the delimeter on the first char */
-    for(i=0;i<strlen(delim);i++) {
-        if(str[0] == delim[i]) {
-            strcpy(arr[IMPORTANT],"");
-            strcpy(arr[REST],strCopy+1);
-            return DELIM_EXIST;
+        addLabel(variablesPtr, CodeImage);
+        lineCopy+=strlen(variablesPtr->label)+1;
+        strcpy(lineCopy,strip(lineCopy));
+    }
+
+    if(variablesPtr->status != Valid)
+        return;
+
+    /* find the opcode and funct */
+    wordPtr->code.opcode = findOpcode(lineCopy);
+    wordPtr->code.funct = findFunct(lineCopy);
+    wordPtr->code.type = findTypeOfInstruction(lineCopy);
+
+    if(wordPtr->code.opcode == MINUS1_6_BITS) {
+        variablesPtr->status = UnknownOperation;
+        return;
+    }
+
+    lineCopy += findNumberOfLeters(wordPtr->code.opcode,wordPtr->code.funct); /* go to the next char after the operation */
+    strcpy(lineCopy,strip(lineCopy));
+    if(findNumberOfOperands(wordPtr->code.opcode,wordPtr->code.funct)==3)
+        fillTreeOperands(lineCopy,wordPtr,variablesPtr);
+    else if(findNumberOfOperands(wordPtr->code.opcode,wordPtr->code.funct)==2)
+        fillTwoOperands(lineCopy,wordPtr,variablesPtr);
+    else if(findNumberOfOperands(wordPtr->code.opcode,wordPtr->code.funct)==1)
+        fillOneOperand(lineCopy,wordPtr,variablesPtr);
+    else if(wordPtr->code.opcode != 63)
+            /*add stop command work*/
+
+    else { /* operation has no operands */
+        if(strcmp(lineCopy,"")) /* if there is text left raise error */
+            variablesPtr->status = TextAfterCommand;
+        else {
+            wordPtr->code.opcode = 63;
+            wordPtr->code.address = 0;
+            wordPtr->code.reg= 0;
+
+            variablesPtr->IC=IC+4;
+            variablesPtr->status = Valid;
         }
     }
 
-    tok = strtok(strCopy, delim); /* look for the first token */
-    
-    
-    
-
-    tok = strtok(NULL, delim); /* look for the next token */
-    strcpy(arr[IMPORTANT], strCopy);
-    strcpy(temp, (str + strlen(strCopy) + 1)); /* we want the rest of the string, and not until the next token */
-    strcpy(arr[REST],temp);
-    
-    strcpy(temp, (str + strlen(strCopy) + 3));
-    strcpy(arr[2],temp);
-    
-    
-    
-    
-    
-    return DELIM_EXIST;
-}
-
-
-
-int main()
-{
-	
-	char arr[3][LINE_LEN];
-	char str[82]="$2,$5,$7";
-	char delim[3]=",";
-	split(str,delim,arr);
-	printf(arr[0]);
-	printf("%c",'\n');
-	printf(arr[1]);
-	printf("%c",'\n');
-	printf(arr[2]);
-	printf("%c",'\n');
-	printf(str);
-	
-	
-	
-	return 0;
-	
-		
-
+    lineCopy = temp;
+    free(lineCopy);
 }

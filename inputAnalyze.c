@@ -179,6 +179,27 @@ int findOpcode(char *str) {
     return -1;
 }
 
+int findNumberOfOperands(int opcode,int funct){
+    if((opcode>=0&&opcode<=24)&&opcode!=1)
+        return 3;
+    else if (opcode==1)
+        return 2;
+    else if(opcode>=30&&opcode<=32)
+        return 1;
+    else
+        return 0;
+}
+
+InstructionType findTypeOfInstruction(char *str){
+    if(findFunct(str)!=0)
+        return R;
+    else if (findOpcode(str)>=1&&findOpcode(str)<=24)
+        return I;
+    else if (findOpcode(str)>=30&&findOpcode(str)<=32||findOpcode(str)==63)
+        return J;
+    return NoneInstructionType;
+}
+
 /*find number of letters in instraction*/
 int findNumberOfLeters(int opcode,int funct){
     if(opcode<=1&&opcode<=12||opcode==14||opcode==32||opcode==63)
