@@ -5,7 +5,8 @@
 
 #define FIRST 0
 #define SECEND 1
-#define THIRED 2
+#define THREE 2
+#define STRING_PARTS_T 3
 #define STRING_PARTS 2
 #define DELIM_EXIST 0
 #define DELIM_NOT_EXIST 1
