@@ -24,6 +24,7 @@
 #define MAX_32_UNSIGNED 4294967295
 #define MINUS1_6_BITS 63
 #define STARTING_IC 100 /* Initial IC value */
+#define STARTING_DC 0   /* Initial DC value */
 
 #define ADDRESS_LEN 25
 #define OPCODE_LEN 6
