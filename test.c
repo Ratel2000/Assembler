@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 
-int split3(char *str, char *delim, char arr[2][80]) {
+int split3(char *str, char *delim, char arr[3][80]) {
     char *tok;
     char strCopy[80];
     char temp2[80],temp3[80];
@@ -29,7 +29,7 @@ int split3(char *str, char *delim, char arr[2][80]) {
     strcpy(arr[0], tok);
     tok = strtok (NULL, delim);
     
-    int d = strcpy(arr[1], tok);
+    strcpy(arr[1], tok);
     
     strcpy(arr[2], (strCopy+( strlen(arr[0]) + strlen(arr[1])+2)));
 
@@ -40,8 +40,8 @@ int split3(char *str, char *delim, char arr[2][80]) {
 
 int main()
 {
-	char arr[2][80];
-	arr[2][80]='\0';
+	char arr[3][80];
+	
 	char *str="$3,$5,loop";
 	char *del=",";
 	split3(str,del,arr);
