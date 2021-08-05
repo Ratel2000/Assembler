@@ -49,8 +49,8 @@ void advanceToNextLine(FILE *f)
 /* return the statement of the sentence or invalid */
 Statement firstCheck(char *str)
 {
-    char arr[STRING_PARTS][LINE_LEN];
-    memset(arr, 0, sizeof(arr[0][0]) * STRING_PARTS * LINE_LEN);
+    char arr[STRING_PARTS_2][LINE_LEN];
+    memset(arr, 0, sizeof(arr[0][0]) * STRING_PARTS_2 * LINE_LEN);
     /* line too long */
     if (str[strlen(str) - 1] != '\n')
     {
@@ -73,9 +73,9 @@ Statement firstCheck(char *str)
     {
         /* check if '.' is the first char, or it comes after whitespace or : 
            (after label and not inside string or a number) */
-        if(!strcmp(arr[IMPORTANT],""))
+        if(!strcmp(arr[FIRST],""))
             return Directive;
-        if(isspace(arr[IMPORTANT][strlen(arr[IMPORTANT])-1]) || arr[IMPORTANT][strlen(arr[IMPORTANT]-1)] == ':')
+        if(isspace(arr[FIRST][strlen(arr[FIRST])-1]) || arr[FIRST][strlen(arr[FIRST]-1)] == ':')
             return Directive;
         /*return Directive;*/
     }
@@ -164,7 +164,7 @@ int split3(char *str, char *delim, char arr[STRING_PARTS_3][LINE_LEN]) {
     if(!strcmp(strCopy,"")) { /* if the string is empty */
         strcpy(arr[FIRST],"");
         strcpy(arr[SECEND],"");
-        strcpy(arr[THRED],"");
+        strcpy(arr[THERED],"");
         return DELIM_NOT_EXIST;
     }
 
@@ -172,7 +172,7 @@ int split3(char *str, char *delim, char arr[STRING_PARTS_3][LINE_LEN]) {
     if (tok != NULL && strlen(tok) == strlen(str)) { /* if there is no delim */
         strcpy(arr[FIRST], str);
         strcpy(arr[SECEND], "");
-        strcpy(arr[THRED], "");
+        strcpy(arr[THERED], "");
         return DELIM_NOT_EXIST;
     }   
 	
@@ -183,7 +183,7 @@ int split3(char *str, char *delim, char arr[STRING_PARTS_3][LINE_LEN]) {
     strcpy(arr[SECEND], tok);
     
 		/* we want the rest of the string, and not until the next token */
-    strcpy(arr[THRED], (strCopy+( strlen(arr[FIRST]) + strlen(arr[SECEND])+2)));
+    strcpy(arr[THERED], (strCopy+( strlen(arr[FIRST]) + strlen(arr[SECEND])+2)));
 
     
     return DELIM_EXIST;
@@ -191,10 +191,10 @@ int split3(char *str, char *delim, char arr[STRING_PARTS_3][LINE_LEN]) {
 
 /* returns the opcode of the str, -1 if not an opcode */
 int findOpcode(char *str) {
-    char arr[STRING_PARTS][LINE_LEN];
+    char arr[STRING_PARTS_2][LINE_LEN];
     char oper[LINE_LEN];
     split(str," \t",arr);
-    strcpy(oper,arr[IMPORTANT]);
+    strcpy(oper,arr[FIRST]);
     if(!strcmp(oper,"add") || !strcmp(oper,"sub")||!strcmp(oper,"and") || !strcmp(oper,"or")||!strcmp(oper,"nor"))
         return 0;
     if(!strcmp(oper,"move")||!strcmp(oper,"mvhi")||!strcmp(oper,"mvlo"))

@@ -10,7 +10,7 @@
 
 #define FIRST 0
 #define SECEND 1
-#define THRED 2
+#define THERED 2
 #define STRING_PARTS_3 3
 #define STRING_PARTS_2 2
 #define DELIM_EXIST 0
@@ -33,7 +33,9 @@ void advanceToNextLine(FILE*);
 
 void checkSyntaxValidLabel(variables *, char *, Bool);
 
-int split(char *, char *, char[STRING_PARTS][LINE_LEN]);
+int split(char *, char *, char[STRING_PARTS_2][LINE_LEN]);
+
+int split3(char *, char *, char[STRING_PARTS_3][LINE_LEN]);
 
 int findOpcode(char *);
 
