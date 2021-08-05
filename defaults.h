@@ -16,7 +16,7 @@
 #define FILE_NAME_LEN 100
 #define AS_OB_EXTENSION_LEN 3
 #define EXT_ENT_EXTENSION_LEN 4
-#define LINE_LEN 82
+#define LINE_LEN 80
 #define LABEL_LEN 31
 #define WORD_LEN 32
 #define MAX_32_SIGNED 2147483647
