@@ -206,6 +206,75 @@ int findOpcode(char *str) {
     return -1;
 }
 
+/* return the register number of str, -1 if not a register */
+int findReg(char *str) {
+    if(!strcmp(str,"$0"))
+        return 0;
+    if(!strcmp(str,"$1"))
+        return 1;
+    if(!strcmp(str,"$2"))
+        return 2;
+    if(!strcmp(str,"$3"))
+        return 3;
+    if(!strcmp(str,"$4"))
+        return 4;
+    if(!strcmp(str,"$5"))
+        return 5;
+    if(!strcmp(str,"$6"))
+        return 6;
+    if(!strcmp(str,"$7"))
+        return 7;
+    if(!strcmp(str,"$8"))
+        return 8;
+    if(!strcmp(str,"$9"))
+        return 9;
+    if(!strcmp(str,"$10"))
+        return 10;
+    if(!strcmp(str,"$11"))
+        return 11;
+    if(!strcmp(str,"$12"))
+        return 12;
+    if(!strcmp(str,"$13"))
+        return 13;
+    if(!strcmp(str,"$14"))
+        return 14;
+    if(!strcmp(str,"$15"))
+        return 15;
+        if(!strcmp(str,"$16"))
+        return 16;
+    if(!strcmp(str,"$17"))
+        return 17;
+    if(!strcmp(str,"$18"))
+        return 18;
+    if(!strcmp(str,"$19"))
+        return 19;
+    if(!strcmp(str,"$20"))
+        return 20;
+    if(!strcmp(str,"$21"))
+        return 21;
+    if(!strcmp(str,"$22"))
+        return 22;
+    if(!strcmp(str,"$23"))
+        return 23;
+    if(!strcmp(str,"$24"))
+        return 24;
+    if(!strcmp(str,"$25"))
+        return 25;
+    if(!strcmp(str,"$26"))
+        return 26;
+    if(!strcmp(str,"$27"))
+        return 27;
+    if(!strcmp(str,"$28"))
+        return 28;
+    if(!strcmp(str,"$29"))
+        return 29;
+    if(!strcmp(str,"$30"))
+        return 30;
+    if(!strcmp(str,"$31"))
+        return 31;
+    return -1;
+}
+
 int findNumberOfOperands(int opcode,int funct)
 {
     if((opcode >= 0 && opcode <= 24) && opcode != 1)
