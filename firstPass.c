@@ -117,12 +117,12 @@ void handleInstruction(variables *variablesPtr,Word *wordPtr) {
         if(strcmp(lineCopy,"")) /* if there is text left raise error */
             variablesPtr->status = TextAfterCommand;
         else {
-            wordPtr->code.InstructionType = J;
+            wordPtr->code.type = J;
             wordPtr->code.opcode = 63;
             wordPtr->code.address = 0;
             wordPtr->code.reg= 0;
 
-            variablesPtr->IC=IC+4;
+            variablesPtr->IC+=4;
             variablesPtr->status = Valid;
         }
     }
@@ -134,9 +134,9 @@ void handleInstruction(variables *variablesPtr,Word *wordPtr) {
 
 
 void fillR(char *str, Word *word, variables *variablesPtr){
-    if(wordPtr->code.opcode==1 )
+    if(word->code.opcode==1 )
         fillTwoOperandsR(str,word,variablesPtr);
-    if(wordPtr->code.opcode==0)
+    if(word->code.opcode==0)
         fillTreeOperandsR(str,word,variablesPtr);
 }
 
@@ -148,7 +148,7 @@ void fillI(char *str, Word *word, variables *variablesPtr)
     int op1,op2,op3;
     int tokExist;
     memset(arr,'\0',sizeof(arr[0][0])*STRING_PARTS_3*LINE_LEN);
-    memset(checkExtraOperand,'\0',sizeof(checkExtraOperand[0][0])*STRING_PARTS*LINE_LEN);
+    memset(checkExtraOperand,'\0',sizeof(checkExtraOperand[0][0])*STRING_PARTS_3*LINE_LEN);
 
     tokExist = split3(str,",",arr); /* split the 3 operands*/
     strcpy(arr[FIRST],strip(arr[FIRST]));/*clear from spaces*/
@@ -162,9 +162,9 @@ void fillI(char *str, Word *word, variables *variablesPtr)
             variablesPtr->status = MissingOperand;
     }
     else { /* if there is a comma */
-        if(!strcmp(arr[FIRST],"") && !strcmp(arr[SECEND],"") && !strcmp(arr[THERED],"") /* before and after the comma empty - no operands*/
+        if(!strcmp(arr[FIRST],"") && !strcmp(arr[SECEND],"") && !strcmp(arr[THERED],"")) /* before and after the comma empty - no operands*/
             variablesPtr->status = NoOperands;
-                else if(!strcmp(arr[FIRST],"") || !strcmp(arr[SECEND],"")||!strcmp(arr[THERED],"") /* before or after the comma empty - no operands */
+    		else if(!strcmp(arr[FIRST],"") || !strcmp(arr[SECEND],"")||!strcmp(arr[THERED],""))/* before or after the comma empty - no operands */
             variablesPtr->status = MissingOperand;
     }
 
@@ -200,7 +200,7 @@ void fillI(char *str, Word *word, variables *variablesPtr)
             return;
         }
 
-        word->code.InstructionType = I;
+        word->code.type = I;
         word->code.rs = op1;
         word->code.immed = op2;
         word->code.rt = op3;
@@ -208,7 +208,7 @@ void fillI(char *str, Word *word, variables *variablesPtr)
     }
     else if(word->code.opcode>=15&&word->code.opcode<=18) {
 
-        if (checkNum(arr[SECOND]) != Valid) {
+        if (checkNum(arr[SECEND]) != Valid) {
             variablesPtr->status=InvalidNumber;
             return;
         }
@@ -221,7 +221,7 @@ void fillI(char *str, Word *word, variables *variablesPtr)
             variablesPtr->status = InvalidOperand;
             return;
         }
-        word->code.InstructionType = I;
+        word->code.type = I;
         word->code.rs = op1;
         word->code.rt = op2;
         word->code.unused = 0;
@@ -231,7 +231,7 @@ void fillI(char *str, Word *word, variables *variablesPtr)
 
 
     addWordToImage(&variablesPtr->codeHptr,*word,variablesPtr->IC);
-    variablesPtr->IC=IC+4;
+    variablesPtr->IC+=4;
 
     variablesPtr->status = Valid;
 }
@@ -240,12 +240,12 @@ void fillI(char *str, Word *word, variables *variablesPtr)
 /* this function handles the instruction R commands with 3 operands and fills the word if there are no errors*/
 void fillTreeOperandsR(char *str, Word *word, variables *variablesPtr)
 {
-    char arr[REST][LINE_LEN];
+    char arr[THERED][LINE_LEN];
     char checkExtraOperand[STRING_PARTS_3][LINE_LEN];
     int op1,op2,op3;
     int tokExist;
-    memset(arr,'\0',sizeof(arr[0][0])*STRING_PARTS*LINE_LEN);
-    memset(checkExtraOperand,'\0',sizeof(checkExtraOperand[0][0])*STRING_PARTS*LINE_LEN);
+    memset(arr,'\0',sizeof(arr[0][0])*STRING_PARTS_3*LINE_LEN);
+    memset(checkExtraOperand,'\0',sizeof(checkExtraOperand[0][0])*STRING_PARTS_3*LINE_LEN);
 
     tokExist = split(str,",",arr); /* split the two operands */
     strcpy(arr[FIRST],strip(arr[FIRST]));/*clear from spaces*/
@@ -259,9 +259,9 @@ void fillTreeOperandsR(char *str, Word *word, variables *variablesPtr)
             variablesPtr->status = MissingOperand;
     }
     else { /* if there is a comma */
-        if(!strcmp(arr[FIRST],"") && !strcmp(arr[SECEND],"") && !strcmp(arr[THERED],"") /* before and after the comma empty - no operands*/
+        if(!strcmp(arr[FIRST],"") && !strcmp(arr[SECEND],"") && !strcmp(arr[THERED],"")) /* before and after the comma empty - no operands*/
             variablesPtr->status = NoOperands;
-        else if(!strcmp(arr[FIRST],"") || !strcmp(arr[SECEND],"")||!strcmp(arr[THERED],"") /* before or after the comma empty - no operands */
+        else if(!strcmp(arr[FIRST],"") || !strcmp(arr[SECEND],"")||!strcmp(arr[THERED],"")) /* before or after the comma empty - no operands */
             variablesPtr->status = MissingOperand;
     }
 
@@ -292,25 +292,26 @@ void fillTreeOperandsR(char *str, Word *word, variables *variablesPtr)
         return;
     }
 
-    word->code.InstructionType=R;
+    word->code.type=R;
     word->code.rd=op1;
     word->code.rs = op2;
     word->code.rt = op3;
     word->code.unused=0;
 
-    /*addWordToImage(&variablesPtr->codeHptr,*word,variablesPtr->IC);*/
-    variablesPtr->IC=IC+4;
+    addWordToImage(&variablesPtr->codeHptr,*word,variablesPtr->IC);
+    variablesPtr->IC+=4;
 
     variablesPtr->status = Valid;
 }
+
 void fillTwoOperandsR(char *str, Word *word, variables *variablesPtr)
 {
-    char arr[STRING_PARTS][LINE_LEN];
-    char checkExtraOperand[STRING_PARTS][LINE_LEN];
+    char arr[STRING_PARTS_2][LINE_LEN];
+    char checkExtraOperand[STRING_PARTS_2][LINE_LEN];
     int op1,op2;
     int tokExist;
-    memset(arr,'\0',sizeof(arr[0][0])*STRING_PARTS*LINE_LEN);
-    memset(checkExtraOperand,'\0',sizeof(checkExtraOperand[0][0])*STRING_PARTS*LINE_LEN);
+    memset(arr,'\0',sizeof(arr[0][0])*STRING_PARTS_2*LINE_LEN);
+    memset(checkExtraOperand,'\0',sizeof(checkExtraOperand[0][0])*STRING_PARTS_2*LINE_LEN);
 
     tokExist = split(str,",",arr); /* split the two operands */
     strcpy(arr[FIRST],strip(arr[FIRST]));
@@ -332,7 +333,7 @@ void fillTwoOperandsR(char *str, Word *word, variables *variablesPtr)
     if(split(arr[SECEND],",",checkExtraOperand) == DELIM_EXIST) { /* split with the next comma, if there are more */
         if(!strcmp(checkExtraOperand[SECEND],"")) /* if the part after the comma is empty we have extra comma */
             variablesPtr->status = ExtraComma;
-        else if(!strcmp(checkExtraOperand[IMPORTANT],"")) /* if the part before the comma is empty we have extra comma */
+        else if(!strcmp(checkExtraOperand[FIRST],"")) /* if the part before the comma is empty we have extra comma */
             variablesPtr->status = ExtraComma;
         else
             variablesPtr->status = ExtraOperand; /* we have an extra operand */
@@ -353,14 +354,14 @@ void fillTwoOperandsR(char *str, Word *word, variables *variablesPtr)
         return;
     }
 
-    word->code.InstructionType=R;
+    word->code.type=R;
     word->code.rd=op1;
     word->code.rs = op2;
     word->code.rt = 0;
     word->code.unused=0;
 
-    /*addWordToImage(&variablesPtr->codeHptr,*word,variablesPtr->IC);*/
-    variablesPtr->IC=IC+4;
+    addWordToImage(&variablesPtr->codeHptr,*word,variablesPtr->IC);
+    variablesPtr->IC+=4;
 
     variablesPtr->status = Valid;
 }
@@ -369,7 +370,7 @@ void fillTwoOperandsR(char *str, Word *word, variables *variablesPtr)
 void fillOneOperandJ(char *str,Word *word, variables *variablesPtr)
 {
     int op;
-    char checkExtraOperand[STRING_PARTS][LINE_LEN];
+    char checkExtraOperand[STRING_PARTS_2][LINE_LEN];
 
     strcpy(str, strip(str));
 
@@ -379,7 +380,7 @@ void fillOneOperandJ(char *str,Word *word, variables *variablesPtr)
     }
 
     if(split(str,",",checkExtraOperand) == DELIM_EXIST) { /* if we find a comma */
-        if(!strcmp(checkExtraOperand[REST],"")) /* nothing after the comma - an extra comma */
+        if(!strcmp(checkExtraOperand[SECEND],"")) /* nothing after the comma - an extra comma */
             variablesPtr->status = ExtraComma;
         else /* we have an extra operand */
             variablesPtr->status = ExtraOperand;
@@ -399,7 +400,8 @@ void fillOneOperandJ(char *str,Word *word, variables *variablesPtr)
         return;
 
     addWordToImage(&variablesPtr->codeHptr,*word,variablesPtr->IC);
-    variablesPtr->IC=IC+4;
+    variablesPtr->IC+=4;
 
     variablesPtr->status = Valid;
 }
+

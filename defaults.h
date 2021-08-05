@@ -135,6 +135,7 @@ typedef union {
     unsigned long index;
 
     struct {
+				Bool checkOnSecondPass;
         InstructionType type; /* R, I, J */
         unsigned int address: ADDRESS_LEN;
         unsigned int rs: RS_LEN;
