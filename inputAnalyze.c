@@ -118,7 +118,7 @@ char *strip(char *str) {
 /* split the string str by the delimeters delim
  * arr[0] will contain the string before the delim, and arr[1] will contain the string after
  * return if the delimeters exists, same as arr[1] = "" */
-int split(char *str, char *delim, char arr[STRING_PARTS][LINE_LEN]) {
+int split(char *str, char *delim, char arr[STRING_PARTS_2][LINE_LEN]) {
     char *tok;
     char strCopy[LINE_LEN];
     char temp[LINE_LEN];
@@ -127,31 +127,65 @@ int split(char *str, char *delim, char arr[STRING_PARTS][LINE_LEN]) {
     strcpy(strCopy, str);
 
     if(!strcmp(strCopy,"")) { /* if the string is empty */
-        strcpy(arr[IMPORTANT],"");
-        strcpy(arr[REST],"");
+        strcpy(arr[FIRST],"");
+        strcpy(arr[SECEND],"");
         return DELIM_NOT_EXIST;
     }
 
     /* check if the delimeter on the first char */
     for(i=0;i<strlen(delim);i++) {
         if(str[0] == delim[i]) {
-            strcpy(arr[IMPORTANT],"");
-            strcpy(arr[REST],strCopy+1);
+            strcpy(arr[FIRST],"");
+            strcpy(arr[SECEND],strCopy+1);
             return DELIM_EXIST;
         }
     }
 
     tok = strtok(strCopy, delim); /* look for the first token */
     if (tok != NULL && strlen(tok) == strlen(str)) { /* if there is no delim */
-        strcpy(arr[IMPORTANT], str);
-        strcpy(arr[REST], "");
+        strcpy(arr[FIRST], str);
+        strcpy(arr[SECEND], "");
         return DELIM_NOT_EXIST;
     }
 
     tok = strtok(NULL, delim); /* look for the next token */
-    strcpy(arr[IMPORTANT], strCopy);
+    strcpy(arr[FIRST], strCopy);
     strcpy(temp, (str + strlen(strCopy) + 1)); /* we want the rest of the string, and not until the next token */
-    strcpy(arr[REST],temp);
+    strcpy(arr[SECEND],temp);
+    return DELIM_EXIST;
+}
+
+int split3(char *str, char *delim, char arr[STRING_PARTS_3][LINE_LEN]) {
+    char *tok;
+    char strCopy[LINE_LEN];
+
+    strcpy(strCopy, str);
+
+    if(!strcmp(strCopy,"")) { /* if the string is empty */
+        strcpy(arr[FIRST],"");
+        strcpy(arr[SECEND],"");
+        strcpy(arr[THRED],"");
+        return DELIM_NOT_EXIST;
+    }
+
+    tok = strtok(strCopy, delim); /* look for the first token */
+    if (tok != NULL && strlen(tok) == strlen(str)) { /* if there is no delim */
+        strcpy(arr[FIRST], str);
+        strcpy(arr[SECEND], "");
+        strcpy(arr[THRED], "");
+        return DELIM_NOT_EXIST;
+    }   
+	
+    
+    strcpy(arr[FIRST], tok);
+    tok = strtok (NULL, delim);
+    
+    strcpy(arr[SECEND], tok);
+    
+		/* we want the rest of the string, and not until the next token */
+    strcpy(arr[THRED], (strCopy+( strlen(arr[FIRST]) + strlen(arr[SECEND])+2)));
+
+    
     return DELIM_EXIST;
 }
 

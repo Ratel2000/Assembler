@@ -10,9 +10,9 @@
 
 #define FIRST 0
 #define SECEND 1
-#define THREE 2
-#define STRING_PARTS_T 3
-#define STRING_PARTS 2
+#define THRED 2
+#define STRING_PARTS_3 3
+#define STRING_PARTS_2 2
 #define DELIM_EXIST 0
 #define DELIM_NOT_EXIST 1
 
