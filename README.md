@@ -41,11 +41,3 @@ To compile the assembler, use the provided Makefile. Here's an example command:
 ```bash
 make
 
-This will generate an executable named Assembler. To run the assembler, use the following command:./Assembler input_file.asm
-Replace input_file.asm with the path to your assembly code file.
-
-## Dependencies
-The assembler project uses the standard C library and is intended to be compiled with GCC (GNU Compiler Collection).
-
-## Author
-Daniel Rubin
