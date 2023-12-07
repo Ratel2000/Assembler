@@ -1,43 +1,22 @@
-# Assembly Language Assembler
+# Project Title
 
-This project is an implementation of an assembler for a custom assembly language. The assembler consists of several components, each responsible for different aspects of the assembly process.
+A Two-Pass Assembler for [Your Architecture]
 
-## Project Components
+## Overview
 
-### 1. First Pass
+This project implements a two-pass assembler for [Your Architecture] assembly language. The assembler processes source code files, performs symbol resolution, and generates machine code output. It follows a two-pass approach, where the first pass builds a symbol table, and the second pass generates the machine code.
 
-The `firstPass` module performs the initial pass through the assembly code, analyzing and extracting essential information needed for the assembly process. This includes identifying labels, directives, and instructions.
+## Features
 
-- **File:** `firstPass.c`, `firstPass.h`
+- **Two-Pass Processing:** The assembler follows a two-pass algorithm to process source code efficiently.
 
-### 2. Input Analyzer
+- **Symbol Table:** Maintains a symbol table for tracking labels, external symbols, and entry points.
 
-The `inputAnalyze` module is responsible for analyzing the input assembly code. It handles tasks such as reading lines from the input file, checking syntax validity, and identifying the type of statements (empty, comment, directive, or instruction).
+- **Output Files:** Generates object files, externals files, and entries files based on the input source code.
 
-- **Files:** `inputAnalyze.c`, `inputAnalyze.h`
+## Usage
 
-### 3. Label Table Linked List
-
-The `labelTableLinkedList` module manages a linked list data structure to store information about labels encountered during the assembly process. This includes the label's type, address, and location.
-
-- **Files:** `labelTableLinkedList.c`, `labelTableLinkedList.h`
-
-### 4. Data Image
-
-The `dataImage` module is responsible for managing the data image, which holds information about the assembled data in memory. This includes handling data directives and generating the final machine code.
-
-- **Files:** `dataImage.c`, `dataImage.h`
-
-### 5. Makefile
-
-The `Makefile` provides rules for compiling the source code and linking the different components to create the final executable.
-
-- **File:** `Makefile`
-
-## Compilation and Execution
-
-To compile the assembler, use the provided Makefile. Here's an example command:
+To assemble a program, run the assembler with the following command:
 
 ```bash
-make
-
+assembler input_file1.as input_file2.as ...
